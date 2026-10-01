@@ -29,6 +29,8 @@ worked for this run; an earlier invalid-key failure has been resolved.
 - Cost: not estimated because pricing was not recorded for this run. Token
   usage is available, so cost can be calculated later using the applicable
   model price and cached-input rules if relevant.
+  
+  But, according to OpenAI Playground, using the `gpt-5.4-nano` costs `$ ~0.01 USD` for `~3k output tokens, ~49.5k input tokens and ~52.5k total tokens across 96 requests.`
 
 ## Baseline Comparison
 
