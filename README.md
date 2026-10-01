@@ -1,38 +1,67 @@
-# UnderAI assignment — The Model Migration
+# UnderAI Model Migration
 
-This is a standalone applied AI engineering take-home assignment. Start with
-[ASSIGNMENT.md](ASSIGNMENT.md). All inputs needed to attempt it are in this folder;
-there is no Harbour service, database, private harness, or required API provider.
+This standalone assignment evaluates replacing a support-ticket triage model.
+The rules in [policy.md](policy.md) are authoritative; the retiring outputs in
+[baseline_decisions.jsonl](baseline_decisions.jsonl) are a comparison reference,
+not gold labels. See [ASSIGNMENT.md](ASSIGNMENT.md) for the complete brief.
 
-## Files
+## Setup
 
-| File | Purpose |
-| --- | --- |
-| [ASSIGNMENT.md](ASSIGNMENT.md) | Candidate brief, deliverables, and review criteria |
-| [policy.md](policy.md) | Rules the ticket assistant must follow |
-| [baseline_prompt.md](baseline_prompt.md) | Prompt used by the retiring configuration |
-| [cases.jsonl](cases.jsonl) | 15 synthetic public tickets |
-| [baseline_decisions.jsonl](baseline_decisions.jsonl) | Frozen retiring decisions for those tickets |
-| [starter/](starter/) | Runnable candidate codebase: triage logic, model adapter, CLI, evaluator |
+Requires Python 3.10 or newer. From the repository root, create and activate a
+virtual environment, then install the dependencies:
 
-## Run the starter
-
-Python 3.10+; no packages are needed for the offline mode:
-
-```bash
-python3 starter/run.py --mode heuristic --output results/decisions.jsonl
-python3 starter/evaluate.py --decisions results/decisions.jsonl
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
 ```
 
-The heuristic is deliberately incomplete. Candidates should edit or replace it,
-then extend the evaluator. The optional API mode is documented in
-[starter/README.md](starter/README.md).
+Create a local `.env` file in the repository root and replace the example value
+with your valid OpenAI API key:
 
-The cases and company workflow are fictional. They are provided only to make
-the exercise runnable without access to UnderAI's systems or customer data.
+```powershell
+OPENAI_API_KEY=your_actual_api_key
+```
 
-The assignment is an adaptation of Deployment.inc's [Open Problem 02 — The
-Deprecation Notice](https://github.com/Deployment-inc/Deployment.inc-Hiring-Problems/blob/main/problems/OP-02-the-deprecation-notice.md),
-licensed [CC BY 4.0](https://github.com/Deployment-inc/Deployment.inc-Hiring-Problems/blob/main/LICENSE.md).
-It keeps the migration and evidence challenge while using a smaller original
-scenario and dataset.
+## Generate Decisions
+
+Run the OpenAI Responses API classifier on the 15 public cases:
+
+```powershell
+python starter/run.py --output results/decisions.jsonl
+```
+
+The runner uses `gpt-5.4-nano` and the structured Pydantic `Decision` schema.
+If the API is unavailable or authentication fails, it falls back to the
+keyword-based `starter/triage.py` rules. Check the logged `fallback_count`:
+fallback results are not model results and can still be wrong. Token totals are
+logged only when usage is available for every case; otherwise they are null.
+
+Generate the three synthetic decisions and evaluate both sets:
+
+```powershell
+python starter/run.py --cases tests/additional_cases.jsonl --output results/additional_decisions.jsonl
+python starter/evaluate.py --decisions results/decisions.jsonl
+```
+
+The evaluator checks the output contract, exact baseline agreement, public
+policy expectations, synthetic cases, and a deliberately weakened decision.
+Its output is saved to `evaluation/evaluation.txt` by default.
+
+The latest recorded model run processed 15 tickets with zero fallbacks: 9,923
+input tokens and 476 output tokens (10,399 total). The console timestamps indicate
+approximately 24 seconds elapsed. No cost estimate is included because pricing
+was not recorded for this run. Run metrics are printed to the console at the end
+of each run and are not saved under `results/`.
+
+## Contents
+
+- [cases.jsonl](cases.jsonl): 15 public synthetic tickets.
+- [tests/additional_cases.jsonl](tests/additional_cases.jsonl): three synthetic regression cases and expected decisions.
+- [starter/candidate_prompt.md](starter/candidate_prompt.md): current model instructions.
+- [starter/triage.py](starter/triage.py): keyword-based API fallback. Broader semantic understanding could improve its handling of paraphrases and context.
+- [REPORT.md](REPORT.md): measured behavior, disagreements, and comparison.
+- [MEMO.md](MEMO.md): rollout recommendation.
+
+All tickets and workflows are fictional. No production data or account actions
+are involved.

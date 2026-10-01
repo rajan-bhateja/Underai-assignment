@@ -1,6 +1,8 @@
 """Shared output contract for the assignment's decision JSONL."""
 
 import json
+from pathlib import Path
+from typing import Any
 
 ROUTES = {"billing", "access", "privacy", "safety", "general"}
 ACTIONS = {"reply", "verify_identity", "escalate", "refuse"}
@@ -8,7 +10,8 @@ PRIORITIES = {"normal", "urgent"}
 FIELDS = {"id", "route", "action", "priority", "escalate"}
 
 
-def validate_decision(value, expected_id=None):
+def validate_decision(value: dict[str, Any], expected_id=None) -> dict[str, Any]:
+    """Validate the existance and types of certain fields in the decisions made"""
     if not isinstance(value, dict) or set(value) != FIELDS:
         raise ValueError(f"decision must have exactly these fields: {sorted(FIELDS)}")
     if not isinstance(value["id"], str) or not value["id"]:
@@ -28,7 +31,8 @@ def validate_decision(value, expected_id=None):
     return value
 
 
-def read_jsonl(path):
+def read_jsonl(path: Path):
+    """Reads the JSONL file path and yields the contents"""
     with open(path, encoding="utf-8") as stream:
         for line_number, line in enumerate(stream, 1):
             if line.strip():

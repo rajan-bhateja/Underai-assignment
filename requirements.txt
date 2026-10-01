@@ -1,0 +1,4 @@
+pydantic
+python-multipart
+openai
+python-dotenv

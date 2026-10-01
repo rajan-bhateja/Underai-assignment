@@ -1,0 +1,3 @@
+{"id":"S01","route":"access","action":"verify_identity","priority":"normal","escalate":false}
+{"id":"S02","route":"billing","action":"reply","priority":"normal","escalate":false}
+{"id":"S03","route":"safety","action":"escalate","priority":"urgent","escalate":true}

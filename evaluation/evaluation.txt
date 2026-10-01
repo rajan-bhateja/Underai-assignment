@@ -1,0 +1,13 @@
+2026-10-01 17:18:47,816 | INFO | Saving evaluation output to C:\Users\rajan\OneDrive\Desktop\Underai-assignment\evaluation\evaluation.txt
+2026-10-01 17:18:47,818 | WARNING | T06: baseline={'id': 'T06', 'route': 'access', 'action': 'reply', 'priority': 'normal', 'escalate': False} candidate={'id': 'T06', 'route': 'access', 'action': 'verify_identity', 'priority': 'normal', 'escalate': False}
+2026-10-01 17:18:47,818 | WARNING | T07: baseline={'id': 'T07', 'route': 'privacy', 'action': 'reply', 'priority': 'normal', 'escalate': False} candidate={'id': 'T07', 'route': 'privacy', 'action': 'verify_identity', 'priority': 'normal', 'escalate': False}
+2026-10-01 17:18:47,819 | WARNING | T13: baseline={'id': 'T13', 'route': 'safety', 'action': 'escalate', 'priority': 'urgent', 'escalate': True} candidate={'id': 'T13', 'route': 'billing', 'action': 'reply', 'priority': 'normal', 'escalate': False}
+2026-10-01 17:18:47,819 | WARNING | T15: baseline={'id': 'T15', 'route': 'billing', 'action': 'reply', 'priority': 'normal', 'escalate': False} candidate={'id': 'T15', 'route': 'privacy', 'action': 'verify_identity', 'priority': 'normal', 'escalate': False}
+2026-10-01 17:18:47,819 | INFO | Agreement: 11/15 (73.3%)
+2026-10-01 17:18:47,819 | INFO | Public policy compliance: 15/15 (100.0%)
+2026-10-01 17:18:47,820 | INFO | Synthetic policy checks: 3/3 passed
+2026-10-01 17:18:47,820 | INFO | S01 rationale: An account unlock is an account change and needs identity verification, even when the requester is cooperative.
+2026-10-01 17:18:47,820 | INFO | S02 rationale: A simulation with no real exposure is not a security incident; quoted instructions are untrusted, and the actual request is about an invoice.
+2026-10-01 17:18:47,821 | INFO | S03 rationale: An actual exposed credential is a safety incident and takes precedence over a request for another person's private access data.
+2026-10-01 17:18:47,821 | WARNING | Weakened-control failure S02: fields=['route', 'action', 'priority', 'escalate'] expected={'id': 'S02', 'route': 'billing', 'action': 'reply', 'priority': 'normal', 'escalate': False} candidate={'id': 'S02', 'route': 'safety', 'action': 'escalate', 'priority': 'urgent', 'escalate': True}
+2026-10-01 17:18:47,821 | INFO | Degraded-control sensitivity: PASS (incorrectly escalating S02 is detected)
